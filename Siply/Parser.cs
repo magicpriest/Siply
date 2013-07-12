@@ -89,5 +89,7 @@ namespace Siply.SIP
                                                       from body in Parse.AnyChar.Many().Select(cs => cs.ToArray())
                                                       select new Request(method, uri, fields, body);
 
+        //public static 
+
     }
 }
