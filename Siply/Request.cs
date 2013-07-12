@@ -18,27 +18,29 @@ namespace Siply.SIP
     {
         private readonly RequestMethod _method;
         private readonly Uri _uri;
+        private readonly IReadOnlyDictionary<string, string> _fields;
 
-        public Request(RequestMethod method, Uri uri) 
+        public Request(RequestMethod method, Uri uri, IReadOnlyDictionary<string, string> fields) 
         {
             _method = method;
             _uri = uri;
+            _fields = fields;
         }
 
         public RequestMethod Method
         {
-            get 
-            {
-                return _method;
-            }
+            get { return _method; }
         }
 
         public Uri Uri
         {
             get
-            {
-                return _uri;
-            }
+            { return _uri; }
+        }
+
+        public IReadOnlyDictionary<string, string> HeaderFields
+        {
+            get { return _fields; }
         }
 
     }
