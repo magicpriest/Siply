@@ -85,7 +85,9 @@ namespace Siply.SIP
                                                       from uri in UriParser.Word()
                                                       from version in Parse.String("SIP/2.0").Token()
                                                       from fields in HeaderFieldsParser
-                                                      select new Request(method, uri, fields);
+                                                      from cflf in CRLF
+                                                      from body in Parse.AnyChar.Many().Select(cs => cs.ToArray())
+                                                      select new Request(method, uri, fields, body);
 
     }
 }

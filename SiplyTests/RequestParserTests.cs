@@ -21,6 +21,7 @@ CSeq: 314159 INVITE
 Contact: <sip:alice@pc33.atlanta.com>
 Content-Type: application/sdp
 Content-Length: 142
+
 ";
 
             Request request = Parsers.RequestParser.Parse(input);
