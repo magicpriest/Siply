@@ -48,5 +48,10 @@ namespace Siply.SIP
                 return _host;
             }
         }
+
+        public override string ToString()
+        {
+            return Scheme + ":" + User + "@" + Host;
+        }
     }
 }

@@ -49,5 +49,20 @@ namespace Siply.SIP
         {
             get { return _body; }
         }
+
+        public override string ToString()
+        {
+            string methodLine = Method + ' ' + Uri.ToString() + " SIP/2.0\r\n";
+            string headerFields = HeaderFields.Select(gr =>
+            {
+                return gr.Aggregate((curent, next) =>
+                {
+                    return curent + gr.Key + ": " + next + "\r\n";
+                });
+            }).Aggregate((current, next) => current + next);
+
+            string request= methodLine + headerFields;
+            return  request;
+        }
     }
 }
