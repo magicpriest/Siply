@@ -11,9 +11,11 @@ namespace Siply.SIP
 {
     public static class Parsers
     {
-        static bool IsNewLine(char c) 
+        static Predicate<char> IsNewLine = c => UnicodeCategoryPredicate(UnicodeCategory.LineSeparator)(c) || c == '\n';
+
+        static Predicate<T> Not<T>(this Predicate<T> predicate) 
         {
-            return UnicodeCategoryPredicate(UnicodeCategory.LineSeparator)(c) || c == '\n';
+            return t => !predicate(t);
         }
 
         static Predicate<char> UnicodeCategoryPredicate(UnicodeCategory category)
@@ -30,7 +32,7 @@ namespace Siply.SIP
         // extension
         public static Parser<T> Word<T>(this Parser<T> parser)
         {
-            return parser.Contained(SP, SP);
+            return parser.Contained(SP.Many(), SP.Many());
         }
 
 
@@ -73,15 +75,24 @@ namespace Siply.SIP
                                                                                               });
                                                                                           });
 
-        public static Parser<Request> RequestParser = from method in MethodParser.Word()
-                                                      from uri in UriParser.Word()
-                                                      from version in Parse.String("SIP/2.0").Token()
-                                                      from fields in HeaderFieldsParser
-                                                      from cflf in CRLF
+        public static readonly Parser<Request> RequestParser = from method in MethodParser.Word().Named("Method")
+                                                      from uri in UriParser.Word().Named("Uri")
+                                                      from version in Parse.String("SIP/2.0").Token().Named("Protocol\version")
+                                                      from fields in HeaderFieldsParser.Named("Header fields")
+                                                      from cflf in LF.Named("Emptry line separator")
                                                       from body in Parse.AnyChar.Many().Select(cs => cs.ToArray())
                                                       select new Request(method, uri, fields, body);
 
-        //public static 
+
+        static readonly Parser<int> CodeParser = Parse.Digit.Repeat(3).Text().Select(Convert.ToInt32);
+        static readonly Parser<string> ReasonParser = Parse.CharExcept(IsNewLine.Not(), "phrase except new line").Many().Text();
+
+        public static readonly Parser<Response> ResponseParser = from version in Parse.String("SIP/2.0").Word().Named("Protocol/Version")
+                                                          from code in CodeParser.Named("Status code")
+                                                          from reason in ReasonParser.Token().Named("Reason phrase")
+                                                          from fields in HeaderFieldsParser.Named("Response fields")
+                                                          select new Response(code, reason, fields, null);
+
 
     }
 }

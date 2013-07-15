@@ -73,6 +73,7 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
+    <Compile Include="ResponseParserTests.cs" />
     <Compile Include="LocalizedStrings.cs" />
     <Compile Include="RequestParserTests.cs" />
     <Compile Include="MainPage.xaml.cs">
@@ -134,7 +135,7 @@
   </ItemGroup>
   <ItemGroup>
     <Reference Include="SprachePhone">
-      <HintPath>C:\Users\hackzor\Documents\Visual Studio 2012\Projects\SprachePhone\SprachePhone\Bin\Release\SprachePhone.dll</HintPath>
+      <HintPath>..\..\SprachePhone\SprachePhone\Bin\Release\SprachePhone.dll</HintPath>
     </Reference>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\$(TargetFrameworkIdentifier)\$(TargetFrameworkVersion)\Microsoft.$(TargetFrameworkIdentifier).$(TargetFrameworkVersion).Overrides.targets" />

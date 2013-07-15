@@ -9,14 +9,14 @@ namespace Siply.SIP
     public class Response
     {
         readonly int _code;
-        readonly string _status;
+        readonly string _reason;
         readonly IReadOnlyDictionary<string, string> _fields;
         readonly char[] _body;
 
-        public Response(int code, string status, IReadOnlyDictionary<string, string> fields, char[] body)
+        public Response(int code, string reason, IReadOnlyDictionary<string, string> fields, char[] body)
         {
             _code = code;
-            _status = status;
+            _reason = reason;
             _fields = fields;
             _body = body;
         }
@@ -26,9 +26,9 @@ namespace Siply.SIP
             get { return _code; }
         }
 
-        public string Status
+        public string Reason
         {
-            get { return _status; }
+            get { return _reason; }
         }
 
         public IReadOnlyDictionary<string, string> HeaderFields
