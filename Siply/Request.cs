@@ -18,10 +18,10 @@ namespace Siply.SIP
     {
         private readonly RequestMethod _method;
         private readonly Uri _uri;
-        private readonly IReadOnlyDictionary<string, string> _fields;
+        private readonly ILookup<string, string> _fields;
         private readonly char[] _body;
 
-        public Request(RequestMethod method, Uri uri, IReadOnlyDictionary<string, string> fields, char[] body) 
+        public Request(RequestMethod method, Uri uri, ILookup<string, string> fields, char[] body) 
         {
             _method = method;
             _uri = uri;
@@ -40,7 +40,7 @@ namespace Siply.SIP
             { return _uri; }
         }
 
-        public IReadOnlyDictionary<string, string> HeaderFields
+        public ILookup<string, string> HeaderFields
         {
             get { return _fields; }
         }

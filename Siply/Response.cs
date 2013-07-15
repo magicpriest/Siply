@@ -10,10 +10,10 @@ namespace Siply.SIP
     {
         readonly int _code;
         readonly string _reason;
-        readonly IReadOnlyDictionary<string, string> _fields;
+        readonly ILookup<string, string> _fields;
         readonly char[] _body;
 
-        public Response(int code, string reason, IReadOnlyDictionary<string, string> fields, char[] body)
+        public Response(int code, string reason, ILookup<string, string> fields, char[] body)
         {
             _code = code;
             _reason = reason;
@@ -31,7 +31,7 @@ namespace Siply.SIP
             get { return _reason; }
         }
 
-        public IReadOnlyDictionary<string, string> HeaderFields
+        public ILookup<string, string> HeaderFields
         {
             get { return _fields; }
         }
