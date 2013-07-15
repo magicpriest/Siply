@@ -30,12 +30,7 @@ namespace Siply.SIP
         // extension
         public static Parser<T> Word<T>(this Parser<T> parser)
         {
-            if (parser == null) throw new ArgumentNullException("parser");
-
-            return from leading in SP.Many()
-                   from item in parser
-                   from trailing in SP.Many()
-                   select item;
+            return parser.Contained(SP, SP);
         }
 
 
@@ -72,13 +67,10 @@ namespace Siply.SIP
                                                                                           from fieldValue in FieldValue
                                                                                           select new { fieldKey, fieldValue }).Many()
                                                                                           .Select(fs => {
-                                                                                              var dictionary = new Dictionary<string, string>();
-                                                                                              foreach (var f in fs)
-                                                                                              {
-                                                                                                  dictionary.Add(f.fieldKey, f.fieldValue);
-                                                                                              }
-
-                                                                                              return dictionary;
+                                                                                              return fs.Aggregate(new Dictionary<string, string>(),  (a, i) => {
+                                                                                                  a.Add(i.fieldKey, i.fieldValue);
+                                                                                                  return a;
+                                                                                              });
                                                                                           });
 
         public static Parser<Request> RequestParser = from method in MethodParser.Word()
