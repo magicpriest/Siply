@@ -61,14 +61,25 @@ namespace Siply.SIP
                                                     from linefeed in LF
                                                     select fieldValue;
 
-
-        static readonly Parser<ILookup<string, string>> HeaderFieldsParser = (from fieldKey in Identifier.Word()
+        static readonly Parser<Dictionary<string, List<string>>> HeaderFieldsParser = (from fieldKey in Identifier.Word()
                                                                               from separator in Parse.Char(':').Word()
                                                                               from fieldValue in FieldValue
                                                                               select new { fieldKey, fieldValue }).Many()
                                                                                           .Select(fs =>
                                                                                           {
-                                                                                              return fs.ToLookup(a => a.fieldKey, a => a.fieldValue);
+                                                                                              var dict = new Dictionary<string, List<string>>();
+                                                                                              foreach(var f in fs) 
+                                                                                              {
+                                                                                                  if (dict.ContainsKey(f.fieldKey))
+                                                                                                  {
+                                                                                                      dict[f.fieldKey].Add(f.fieldValue);
+                                                                                                  }
+                                                                                                  else
+                                                                                                  {
+                                                                                                      dict[f.fieldKey] = new List<string>() { f.fieldValue };
+                                                                                                  }
+                                                                                              }
+                                                                                              return dict;
                                                                                           });
 
         public static readonly Parser<Request> RequestParser = from method in MethodParser.Word().Named("Method")

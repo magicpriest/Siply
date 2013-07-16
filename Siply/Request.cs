@@ -18,10 +18,10 @@ namespace Siply.SIP
     {
         private readonly RequestMethod _method;
         private readonly Uri _uri;
-        private readonly ILookup<string, string> _fields;
+        private readonly Dictionary<string, List<string>> _fields;
         private readonly char[] _body;
 
-        public Request(RequestMethod method, Uri uri, ILookup<string, string> fields, char[] body) 
+        public Request(RequestMethod method, Uri uri, Dictionary<string, List<string>> fields, char[] body) 
         {
             _method = method;
             _uri = uri;
@@ -40,7 +40,7 @@ namespace Siply.SIP
             { return _uri; }
         }
 
-        public ILookup<string, string> HeaderFields
+        public Dictionary<string, List<string>> HeaderFields
         {
             get { return _fields; }
         }
@@ -53,15 +53,13 @@ namespace Siply.SIP
         public override string ToString()
         {
             string methodLine = Method + ' ' + Uri.ToString() + " SIP/2.0\r\n";
-            string headerFields = HeaderFields.Select(gr =>
+            string headerFields = String.Concat(HeaderFields.Select(kv =>
             {
-                return gr.Aggregate((curent, next) =>
-                {
-                    return curent + gr.Key + ": " + next + "\r\n";
-                });
-            }).Aggregate((current, next) => current + next);
+                return String.Concat(kv.Value.Select(v => kv.Key + ": " + v + Constants.CRLF));
+            }));
+            
 
-            string request= methodLine + headerFields;
+            string request = methodLine + headerFields;
             return  request;
         }
     }
